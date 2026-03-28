@@ -153,6 +153,11 @@ class TradingAgentsGraph:
             if effort:
                 kwargs["effort"] = effort
 
+        elif provider in ("zai", "z.ai"):
+            zai_thinking = self.config.get("zai_thinking")
+            if zai_thinking:
+                kwargs["zai_thinking"] = True
+
         return kwargs
 
     def _create_tool_nodes(self) -> Dict[str, ToolNode]:

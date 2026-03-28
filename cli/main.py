@@ -559,6 +559,7 @@ def get_user_selections():
     thinking_level = None
     reasoning_effort = None
     anthropic_effort = None
+    zai_thinking = None
 
     provider_lower = selected_llm_provider.lower()
     if provider_lower == "google":
@@ -585,6 +586,14 @@ def get_user_selections():
             )
         )
         anthropic_effort = ask_anthropic_effort()
+    elif provider_lower == "z.ai":
+        console.print(
+            create_question_box(
+                "Step 7: Thinking Mode",
+                "Configure Z.AI thinking mode"
+            )
+        )
+        zai_thinking = ask_zai_thinking_config()
 
     return {
         "ticker": selected_ticker,
@@ -598,6 +607,7 @@ def get_user_selections():
         "google_thinking_level": thinking_level,
         "openai_reasoning_effort": reasoning_effort,
         "anthropic_effort": anthropic_effort,
+        "zai_thinking": zai_thinking,
     }
 
 
@@ -931,6 +941,7 @@ def run_analysis():
     config["google_thinking_level"] = selections.get("google_thinking_level")
     config["openai_reasoning_effort"] = selections.get("openai_reasoning_effort")
     config["anthropic_effort"] = selections.get("anthropic_effort")
+    config["zai_thinking"] = selections.get("zai_thinking")
 
     # Create stats callback handler for tracking LLM/tool calls
     stats_handler = StatsCallbackHandler()

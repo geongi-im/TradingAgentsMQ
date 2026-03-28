@@ -48,6 +48,23 @@ VALID_MODELS = {
         "grok-4-fast-reasoning",
         "grok-4-fast-non-reasoning",
     ],
+    "zai": [
+        # GLM-5 series
+        "glm-5",
+        "glm-5-turbo",
+        # GLM-4.7 series
+        "glm-4.7",
+        "glm-4.7-flashx",
+        "glm-4.7-flash",
+        # GLM-4.6 series
+        "glm-4.6",
+        # GLM-4.5 series
+        "glm-4.5",
+        "glm-4.5-x",
+        "glm-4.5-air",
+        "glm-4.5-airx",
+        "glm-4.5-flash",
+    ],
 }
 
 
@@ -56,7 +73,7 @@ def validate_model(provider: str, model: str) -> bool:
 
     For ollama, openrouter - any model is accepted.
     """
-    provider_lower = provider.lower()
+    provider_lower = provider.lower().replace(".", "")
 
     if provider_lower in ("ollama", "openrouter"):
         return True

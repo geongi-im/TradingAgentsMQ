@@ -27,18 +27,19 @@ _PASSTHROUGH_KWARGS = (
 # Provider base URLs and API key env vars
 _PROVIDER_CONFIG = {
     "xai": ("https://api.x.ai/v1", "XAI_API_KEY"),
+    "zai": ("https://api.z.ai/api/coding/paas/v4", "ZAI_API_KEY"),
     "openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY"),
     "ollama": ("http://localhost:11434/v1", None),
 }
 
 
 class OpenAIClient(BaseLLMClient):
-    """Client for OpenAI, Ollama, OpenRouter, and xAI providers.
+    """Client for OpenAI, Ollama, OpenRouter, xAI, and Z.AI providers.
 
     For native OpenAI models, uses the Responses API (/v1/responses) which
     supports reasoning_effort with function tools across all model families
-    (GPT-4.1, GPT-5). Third-party compatible providers (xAI, OpenRouter,
-    Ollama) use standard Chat Completions.
+    (GPT-4.1, GPT-5). Third-party compatible providers (xAI, Z.AI,
+    OpenRouter, Ollama) use standard Chat Completions.
     """
 
     def __init__(
@@ -77,6 +78,12 @@ class OpenAIClient(BaseLLMClient):
         # all model families. Third-party providers use Chat Completions.
         if self.provider == "openai":
             llm_kwargs["use_responses_api"] = True
+
+        # Z.AI: pass thinking config via extra_body to bypass SDK validation
+        if self.provider == "zai" and self.kwargs.get("zai_thinking"):
+            llm_kwargs.setdefault("model_kwargs", {})["extra_body"] = {
+                "thinking": {"type": "enabled"},
+            }
 
         return NormalizedChatOpenAI(**llm_kwargs)
 
